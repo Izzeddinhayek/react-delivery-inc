@@ -36,3 +36,48 @@
     transform: rotate(360deg);
   }
 }
+.inv-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 10%;
+}
+
+.inv-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px  ;
+}
+
+.inv-header {
+  display: flex;
+  justify-content: space-between;
+  
+  margin-left: 10%;
+  margin-right: 10%;
+  font-size: large;
+  font-weight: 500;
+  font-family: sans-serif;
+}
+
+.inv-info {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 9.5%;
+  margin-right: 8%;
+  
+}
+
+.inv-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+
+
+
