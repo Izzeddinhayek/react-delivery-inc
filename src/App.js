@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Routes,
   Route,
   Link
 } from "react-router-dom";
@@ -31,86 +30,104 @@ import './App.css';
 import CustomerList from './CustomerList';
 import PackageList from './PackageList';
 import Invoices from './Invoices';
-
+import Invoice from './Invoice';
+import { InvoiceContext } from './Contexts/InvoiceContext';
 function App() {
 
+  useEffect(() => {
+    fetch("/data.json")
+      .then((response) => response.json())
+      .then((data) => setAppData(data));
+  }, []);
 
+  const [appData, setAppData] = useState({ customers: [], packages: [] });
   const [open, setOpen] = useState(false);
 
+
+
   return (
+
     <Router>
       <div className="App">
+        <InvoiceContext.Provider value={{ appData, setAppData }}>
 
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={() => setOpen(!open)}
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={() => setOpen(!open)}
+                  sx={{ mr: 2 }}
+                >
+                  <MenuIcon />
+                </IconButton>
 
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/"> Mail Delivery Service</Link>
-              </Typography>
-
-
-            </Toolbar>
-          </AppBar>
-        </Box>
-
-        <Drawer
-          anchor={"left"}
-          open={open}
-          onClose={() => { setOpen(false) }}
-
-        >
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  <Link to="/" className='link-style'> Mail Delivery Service</Link>
+                </Typography>
 
 
-          <List style={{ width: "300px" }}>
-            <ListItem button>
-              <Link to="/customerpage">
+              </Toolbar>
+            </AppBar>
+          </Box>
 
-                <ListItemText primary={"Customers"} />
-              </Link>
-            </ListItem>
-            <ListItem button>
-              <Link to="/packagelist">
-                <ListItemText primary={"Packages"} />
-              </Link>
-            </ListItem>
-            <ListItem button>
-              <Link to="/Invoices">
-                <ListItemText primary={"Invoices"} />
-              </Link>
-            </ListItem>
-          </List>
+          <Drawer
+            anchor={"left"}
+            open={open}
+            onClose={() => { setOpen(false) }}
+          >
 
 
-        </Drawer>
+            <List style={{ width: "300px" }}>
+              <ListItem button>
+                <Link to="/customerpage" className='link-style'>
 
-        <Switch>
-          <Route path="/">
+                  <ListItemText primary={"Customers"} />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to="/packagelist" className='link-style'>
+                  <ListItemText primary={"Packages"} />
+                </Link>
+              </ListItem>
+              <ListItem button>
+                <Link to="/Invoices" className='link-style'>
+                  <ListItemText primary={"Invoices"} />
+                </Link>
+              </ListItem>
+            </List>
 
 
-            <Route path="/customerpage">
-              <CustomerList />
+          </Drawer>
+
+
+          <Switch>
+            <Route path="/">
+
+
+              <Route path="/customerpage">
+                <CustomerList />
+              </Route>
+
+              <Route path="/packagelist">
+                <PackageList />
+              </Route>
+              <Route path="/Invoices">
+                <Invoices />
+              </Route>
+              <Route path="/Invoice/:id">
+                <Invoice />
+              </Route>
+
             </Route>
-
-            <Route path="/packagelist">
-              <PackageList />
-            </Route>
-          </Route>
-        </Switch>
+          </Switch>
 
 
+        </InvoiceContext.Provider>
       </div>
-
     </Router>
 
   );

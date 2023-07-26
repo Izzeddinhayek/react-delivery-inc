@@ -1,4 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react';
+import { InvoiceInfo } from './Contexts/InvoiceInfo';
+import Invoice from './Invoice';
+import { InvoiceContext } from './Contexts/InvoiceContext';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -26,6 +29,20 @@ const Invoices = () => {
 
     const [invoices, setInvoices] = useState([]);
 
+    const {totalWeight,totalPrice,customerName,id} = useContext(InvoiceInfo);
+
+    const invoiceData = [
+        {
+          customerName: customerName,
+          totalWeight: totalWeight,
+          totalPrice: totalPrice,
+          id: id,
+        },
+      ];
+    
+    console.log(invoiceData);
+  
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -37,13 +54,15 @@ const Invoices = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {invoices.map((row) => {
+                    {invoiceData.map((row) => {
 
                         return (
                             <TableRow key={row.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-
+                            >       
+                            <TableCell>{row.customerName}</TableCell>
+                            <TableCell>{row.totalWeight}</TableCell>
+                            <TableCell>{row.totalPrice}</TableCell>
                             </TableRow>
                         )
                     })}
@@ -53,4 +72,4 @@ const Invoices = () => {
     )
 }
 
-export default Invoices
+export default Invoices;
