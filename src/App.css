@@ -45,7 +45,10 @@
   flex-direction: column;
   justify-content: center;
   gap: 40px;
-  margin-top: 10%;
+
+  margin: 0 auto;
+  max-width: 800px; /* Set the max width to keep the content centered on larger screens */
+  padding: 20px;
 }
 
 .inv-col {
@@ -89,6 +92,30 @@
   align-items: center;
   margin-top: 50px;
 }
+@page {
+  size: A4;
+  margin: 0;
+  header, body > div:not(#section-to-print) {
+    display: none;
+  }
+  
+}
+
+
+@media print {
+  body {
+    visibility: hidden;
+  } 
+  #section-to-print {
+    margin-top: 45vw;
+    width: 100%;
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
 
 
 

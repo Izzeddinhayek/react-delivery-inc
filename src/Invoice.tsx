@@ -1,56 +1,64 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { InvoiceContext } from './Contexts/InvoiceContext';
-import { InvoiceInfo } from './Contexts/InvoiceInfo';
-import { useParams } from "react-router-dom";
 
-import CustomerList from './CustomerList';
-import PackageList from './PackageList';
+import { useParams } from "react-router-dom";
+import { InvoiceInfo } from './Contexts/InvoiceInfo';
+
+
 
 interface Params extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
     date: string;
-    customerName: string;
     generatedId: number;
     packageId: any;
     weight: number;
     price: number;
-    totalWeight: string;
-    totalPrice: number;
 }
 
 
 
 
-const Invoice: React.FC<Params> = ({ date, customerName, generatedId, packageId, weight, price, totalWeight, totalPrice }) => {
-    const { appData, setAppData }: any = useContext(InvoiceContext);
+const Invoice: React.FC<Params> = ({ date, generatedId, packageId, weight, price }) => {
+    const { appData }: any = useContext(InvoiceContext);
 
     //get customer ID from url
-    const { id }: any = useParams();
-    console.log(id);
+ 
+    const { setId }: any = useContext(InvoiceInfo);
+    const { id }:any = useParams();
+    
+    
+    const {customerName,setCustomerName}:any = useContext(InvoiceInfo);
+    const {totalWeight,setTotalWeight}:any = useContext(InvoiceInfo);
+    const {totalPrice,setTotalPrice}:any = useContext(InvoiceInfo);
 
     const current = new Date();
     date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
     generatedId = 1;
     const customerData: any = appData.customers.find((customerId: any) => customerId.id == id)
-    customerName = customerData.name;
-    //console.log(customerData);
+    console.log(customerData);
+    
+    
+    
 
     const customerPackage: any = appData.packages.filter((customerId: any) => customerId.customerid == id)
-
+  
     const parseWeight = (weightStr: string): number => {
         const weightNumber = parseInt(weightStr, 10);
         return isNaN(weightNumber) ? 0 : weightNumber;
     };
 
-
-    totalWeight = customerPackage.reduce((sum: any, item: any) => sum + parseWeight(item.weight), 0) + 'kg';
-    totalPrice = customerPackage.reduce((sum: any, item: any) => sum + item.price, 0);
-
-
-
+    useEffect(()=> {
+        setId(id);
+        setCustomerName(customerData.name);
+        setTotalWeight(() => customerPackage.reduce((sum: any, item: any) => sum + parseWeight(item.weight), 0) + 'kg') 
+        setTotalPrice(() => customerPackage.reduce((sum: any, item: any) => sum + Number(item.price), 0)) 
+    },[customerPackage])
+  
+    
+    
     return (
-        <InvoiceInfo.Provider value={{customerName, totalWeight, totalPrice}}>
-
-            <div className='inv-body'>
+       
+        <body>
+            <div id='section-to-print' className='inv-body'>
                 <div className='inv-header'>
                     <div className='inv-col'>
                         <span>{date}</span>
@@ -86,7 +94,8 @@ const Invoice: React.FC<Params> = ({ date, customerName, generatedId, packageId,
                     </p>
                 </div>
             </div>
-        </InvoiceInfo.Provider>
+        </body>
+  
     );
 }
 

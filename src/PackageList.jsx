@@ -1,12 +1,6 @@
-import React, {useContext } from 'react';
-// import AppBar from '@mui/material/AppBar';
-// import Box from '@mui/material/Box';
+import React, { useContext } from 'react';
 import Button from '@mui/material/Button';
-// import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-
-// import AddIcon from '@mui/icons-material/Add';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -20,31 +14,30 @@ import AddRowModal from './Modal';
 import './App.css';
 
 import { InvoiceContext } from './Contexts/InvoiceContext';
-const PackageList = () => {
 
-  const {appData, setAppData} = useContext(InvoiceContext);
+const PackageList = () => {
+  const { appData, setAppData } = useContext(InvoiceContext);
 
   const handleDeleteRow = (index) => {
     setAppData((prevData) => {
       const updatedPackages = prevData.packages.filter((_, i) => i !== index);
-      return {  
-          ...prevData,
-          packages: updatedPackages,
+      return {
+        ...prevData,
+        packages: updatedPackages,
       };
-  });
-
+    });
   }
 
   const handleAddRow = (newRowData) => {
-    
+
     setAppData((prevData) => ({
       ...prevData,
       packages: [...prevData.packages, newRowData],
     }));
   };
-  
-  
-  
+
+
+
 
   const handleMoveRowUp = (index) => {
     if (index > 0) {
@@ -86,10 +79,14 @@ const PackageList = () => {
     ...appData,
     packages: appData.packages.map((pkg) => ({
       ...pkg,
-      customerName: appData.customers.find((c) => c.id === pkg.customerid)?.name || '',
+      customerName: appData.customers.find((c) => c.id === pkg.customerid)?.name || pkg.customerName,
     })),
+    
   };
 
+  enrichedAppData.packages.sort((pkg1, pkg2) => pkg1.shippingOrder - pkg2.shippingOrder);
+
+  console.log(appData);
   return (
 
 
@@ -109,15 +106,17 @@ const PackageList = () => {
                 color="inherit"
                 aria-label="menu"
               >
-                
+
                 <AddRowModal onAddRow={handleAddRow} />
 
-              </IconButton></TableCell>
+              </IconButton>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
 
-          {enrichedAppData.packages.map((row,index) => {
+          {enrichedAppData.packages.map((row, index) => {
+           
 
             return (
               <TableRow key={row.id}
@@ -130,8 +129,8 @@ const PackageList = () => {
 
                 <TableCell >{row.weight}</TableCell>
                 <TableCell >{row.price}</TableCell>
-                <TableCell style={{display:'flex', gap: '10px'}}>
-                  
+                <TableCell style={{ display: 'flex', gap: '10px' }}>
+
 
                   <Button variant="contained" onClick={() => handleDeleteRow(index)}>Delete</Button>
                   <Button variant="contained" onClick={() => handleMoveRowUp(index)}>
@@ -140,8 +139,8 @@ const PackageList = () => {
                   <Button variant="contained" onClick={() => handleMoveRowDown(index)}>
                     Move Down
                   </Button>
-                  
-                  </TableCell>
+
+                </TableCell>
               </TableRow>
             )
           })}
